@@ -7,32 +7,27 @@ import java.util.Map;
  */
 public class LongestConsecutive {
 	public int longestConsecutive(int[] nums) {
-		final Integer[] max = {0};
+		int max = 0;
 		Map<Integer, Integer> icm = new HashMap<>();
 		for (int num : nums) {
-			Integer lc = icm.getOrDefault(num - 1, 0);
-			Integer rc = icm.getOrDefault(num + 1, 0);
-			for (int j = 1; j <= lc; j++) {
-				icm.put(num - j, icm.get(num - j) + 1 + rc);
+			if(icm.containsKey(num)){
+				continue;
 			}
 
-			for (int j = 1; j <= rc; j++) {
-				icm.put(num + j, icm.get(num + j) + 1 + lc);
-			}
-			int lmx = Math.max(lc + 1, rc + 1);
-			icm.put(num, lmx);
+			Integer lc = icm.getOrDefault(num - 1, 0);
+			Integer rc = icm.getOrDefault(num + 1, 0);
+			int temp = rc + 1 + lc;
+			icm.put(num, -1);
+			icm.put(num - lc, temp);
+			icm.put(num + rc, temp);
+			max = Math.max(max, temp);
 		}
-		icm.forEach((k,v)->{
-			if(max[0] < v){
-				max[0] = v;
-			}
-		});
-		return max[0];
+		return max;
 	}
 
 	public static void main(String[] args) {
 		LongestConsecutive longestConsecutive = new LongestConsecutive();
-		int[] nums = {0, 3, 7, 2, 5, 8, 4, 6, 0, 1};
+		int[] nums = {4,0,-4,-2,2,5,2,0,-8,-8,-8,-8,-1,7,4,5,5,-4,6,6,-3};
 		int i = longestConsecutive.longestConsecutive(nums);
 		System.out.println(i);
 	}
